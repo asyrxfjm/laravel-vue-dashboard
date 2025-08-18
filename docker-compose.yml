@@ -1,0 +1,67 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    container_name: laravel-vue-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel-vue-net
+    depends_on:
+      - mysql
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx.Dockerfile
+    container_name: laravel-vue-nginx
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d/
+    networks:
+      - laravel-vue-net
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: laravel-vue-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel_vue_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: secret
+      MYSQL_USER: laravel
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    networks:
+      - laravel-vue-net
+
+  node:
+    build:
+      context: .
+      dockerfile: docker/node.Dockerfile
+    container_name: laravel-vue-node
+    volumes:
+      - ./:/var/www
+    working_dir: /var/www
+    networks:
+      - laravel-vue-net
+    depends_on:
+      - app
+
+networks:
+  laravel-vue-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

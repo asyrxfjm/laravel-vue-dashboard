@@ -15,12 +15,26 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table): void {
             $table->id();
+            $table->string('uuid')->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('contact_number')->nullable()->unique();
+            $table->string('country_code')->nullable();
+            $table->string('address_line_1')->nullable();
+            $table->string('address_line_2')->nullable();
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postcode')->nullable();
+            $table->string('otp')->nullable();
+            $table->string('otp_uuid')->nullable()->unique();
+            $table->timestamp('otp_expired_at')->nullable();
             $table->rememberToken();
+            $table->timestamp('deactivated_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table): void {

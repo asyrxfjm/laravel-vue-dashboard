@@ -12,6 +12,7 @@ defineProps<Props>();
 
 <template>
     <SidebarGroup :class="`group-data-[collapsible=icon]:p-0 ${$props.class || ''}`">
+        <!-- <SidebarGroupLabel>System Settings</SidebarGroupLabel> -->
         <SidebarGroupContent>
             <SidebarMenu>
                 <SidebarMenuItem v-for="item in items" :key="item.title">
